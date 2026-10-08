@@ -1,0 +1,6 @@
+alpaca:
+  base-url: http://localhost
+  api-key: test-key
+  api-secret: test-secret
+  feed: iex
+  symbols: AAPL,MSFT

@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: Kafka-Hands-On
+
+alpaca:
+  base-url: https://data.alpaca.markets
+  feed: iex
+  symbols: AAPL,MSFT,GOOGL,AMZN,NVDA

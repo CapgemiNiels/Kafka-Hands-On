@@ -1,13 +1,15 @@
 package nh.kafkahandson;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
-public class KafkaHandsOnApplication {
+@ConfigurationPropertiesScan
+public class KafkaHandsOnApplication{
 
     public static void main(String[] args) {
         SpringApplication.run(KafkaHandsOnApplication.class, args);
     }
-
 }
