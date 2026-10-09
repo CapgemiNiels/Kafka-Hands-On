@@ -10,8 +10,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("!test")
-class LatestQuotesRunner {
+public class LatestQuotesRunner {
 
     private static final Logger log = LoggerFactory.getLogger(LatestQuotesRunner.class);
 
@@ -23,10 +22,10 @@ class LatestQuotesRunner {
         this.properties = properties;
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    void run() {
+    public List<Quote> run() {
         List<Quote> quotes = client.getLatestQuotes(properties.symbols());
         quotes.forEach(quote -> log.info("{} bid={} ask={} at {}",
                 quote.symbol(), quote.bidPrice(), quote.askPrice(), quote.timestamp()));
+        return quotes;
     }
 }

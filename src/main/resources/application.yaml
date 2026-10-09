@@ -2,6 +2,26 @@ spring:
   application:
     name: Kafka-Hands-On
 
+  kafka:
+    bootstrap-servers: localhost:9092,localhost:9094,localhost:9096
+    producer:
+      acks: all                      # wait for all in-sync replicas (you have min.insync=2)
+      compression-type: gzip
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        enable.idempotence: true     # default in modern clients, explicit is nice
+        delivery.timeout.ms: 120000
+        linger.ms: 20
+        request.timeout.ms: 30000
+        max.in.flight.requests.per.connection: 5
+
+app:
+  kafka:
+    quote-topic: quote-data
+  quotes:
+    poll-interval: PT5M
+
 alpaca:
   base-url: https://data.alpaca.markets
   feed: iex
