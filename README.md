@@ -46,8 +46,8 @@ Prerequisites: JDK 25 and Docker.
 
 2. Provide your Alpaca credentials (a free account is enough) as environment variables:
    ```
-   ALPACA_APIKEY=<your key>
-   ALPACA_APISECRET=<your secret>
+   ALPACA_API_KEY=<your key>
+   ALPACA_API_SECRET=<your secret>
    ```
 3. Start the application:
    ```
