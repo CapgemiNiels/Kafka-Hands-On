@@ -2,6 +2,11 @@ spring:
   application:
     name: Kafka-Hands-On
 
+  datasource:
+    url: jdbc:postgresql://localhost:5432/quotes
+    username: quotes
+    password: quotes
+
   kafka:
     bootstrap-servers: localhost:9092,localhost:9094,localhost:9096
     producer:
@@ -15,6 +20,20 @@ spring:
         linger.ms: 20
         request.timeout.ms: 30000
         max.in.flight.requests.per.connection: 5
+    consumer:
+      group-id: quote-db-writer      # consumers sharing a group id split the partitions between them
+      auto-offset-reset: earliest    # a brand new group starts at the beginning of the topic
+      enable-auto-commit: false      # offsets are committed by the listener container after processing
+      max-poll-records: 100          # upper bound of records returned by one poll()
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        max.poll.interval.ms: 300000 # max time between polls before the consumer is kicked out of the group
+        session.timeout.ms: 45000    # no heartbeat for this long = consumer considered dead
+        heartbeat.interval.ms: 15000 # keep at most 1/3 of session.timeout.ms
+    listener:
+      ack-mode: record               # commit the offset after each successfully processed record
+      concurrency: 3                 # one consumer thread per partition
 
 app:
   kafka:

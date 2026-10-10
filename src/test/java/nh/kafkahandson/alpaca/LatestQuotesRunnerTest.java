@@ -1,6 +1,8 @@
 package nh.kafkahandson.alpaca;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -31,5 +33,43 @@ class LatestQuotesRunnerTest {
         new LatestQuotesRunner(client, properties).run();
 
         assertThat(output).contains("AAPL").contains("338.78").contains("339.27");
+    }
+
+    @Test
+    void returnsQuotesFromClient() {
+        Quote quote = new Quote("AAPL", new BigDecimal("1"), 1, "V", new BigDecimal("2"), 2, "V", Instant.EPOCH);
+        when(client.getLatestQuotes(List.of("AAPL"))).thenReturn(List.of(quote));
+
+        assertThat(runner(List.of("AAPL")).run()).containsExactly(quote);
+    }
+
+    @Test
+    void requestsQuotesForConfiguredSymbols() {
+        when(client.getLatestQuotes(List.of("AAPL", "MSFT"))).thenReturn(List.of());
+
+        runner(List.of("AAPL", "MSFT")).run();
+
+        verify(client).getLatestQuotes(List.of("AAPL", "MSFT"));
+    }
+
+    @Test
+    void returnsEmptyListAndLogsNothingWhenClientReturnsNoQuotes(CapturedOutput output) {
+        when(client.getLatestQuotes(List.of("AAPL"))).thenReturn(List.of());
+
+        assertThat(runner(List.of("AAPL")).run()).isEmpty();
+        assertThat(output).doesNotContain("bid=");
+    }
+
+    @Test
+    void propagatesClientException() {
+        when(client.getLatestQuotes(List.of("AAPL"))).thenThrow(new AlpacaClientException("failed"));
+
+        assertThatThrownBy(() -> runner(List.of("AAPL")).run())
+                .isInstanceOf(AlpacaClientException.class)
+                .hasMessage("failed");
+    }
+
+    private LatestQuotesRunner runner(List<String> symbols) {
+        return new LatestQuotesRunner(client, new AlpacaProperties("http://x", "k", "s", "iex", symbols));
     }
 }

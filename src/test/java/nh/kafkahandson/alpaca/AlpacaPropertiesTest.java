@@ -57,4 +57,30 @@ class AlpacaPropertiesTest {
                 .run(context -> assertThat(context).hasFailed());
     }
 
+    @Test
+    void failsToStartWhenApiSecretIsMissing() {
+        runner.withPropertyValues(
+                        "alpaca.base-url=https://data.alpaca.markets",
+                        "alpaca.api-key=key")
+                .run(context -> assertThat(context).hasFailed());
+    }
+
+    @Test
+    void failsToStartWhenBaseUrlIsMissing() {
+        runner.withPropertyValues("alpaca.api-key=key", "alpaca.api-secret=secret")
+                .run(context -> assertThat(context).hasFailed());
+    }
+
+    @Test
+    void startsWithoutFeedAndSymbols() {
+        runner.withPropertyValues(
+                        "alpaca.base-url=https://data.alpaca.markets",
+                        "alpaca.api-key=key",
+                        "alpaca.api-secret=secret")
+                .run(context -> {
+                    assertThat(context).hasNotFailed();
+                    assertThat(context.getBean(AlpacaProperties.class).feed()).isNull();
+                    assertThat(context.getBean(AlpacaProperties.class).symbols()).isNull();
+                });
+    }
 }

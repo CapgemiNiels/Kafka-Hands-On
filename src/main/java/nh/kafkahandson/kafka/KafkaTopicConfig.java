@@ -16,9 +16,18 @@ class KafkaTopicConfig {
         return TopicBuilder.name(props.quoteTopic())
                 .partitions(3)
                 .replicas(3)
-                .config(TopicConfig.MIN_IN_SYNC_REPLICAS_CONFIG, "2")
+                .config(TopicConfig.MIN_IN_SYNC_REPLICAS_CONFIG, "3")
                 .config(TopicConfig.RETENTION_MS_CONFIG, String.valueOf(Duration.ofDays(7).toMillis()))
                 .build();
     }
-}
 
+    @Bean
+    NewTopic quoteDeadLetterTopic(KafkaTopicProperties props) {
+        return TopicBuilder.name(props.quoteTopic() + KafkaConsumerConfig.DEAD_LETTER_SUFFIX)
+                .partitions(3)
+                .replicas(3)
+                .config(TopicConfig.MIN_IN_SYNC_REPLICAS_CONFIG, "2")
+                .config(TopicConfig.RETENTION_MS_CONFIG, String.valueOf(Duration.ofDays(30).toMillis()))
+                .build();
+    }
+}

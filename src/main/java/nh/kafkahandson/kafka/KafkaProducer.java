@@ -35,7 +35,7 @@ public class KafkaProducer {
                         log.error("Failed to publish quote for {}", quote.symbol(), ex);
                     } else {
                         var md = result.getRecordMetadata();
-                        log.info("Published {} to topic:{} on partition:{} with offset:{}", quote.symbol(), md.topic(), md.partition(), md.offset());
+                        log.info("Produced quote with key:{} to topic:{} on partition:{} with offset:{}", quote.symbol(), md.topic(), md.partition(), md.offset());
                     }
                 });
     }
