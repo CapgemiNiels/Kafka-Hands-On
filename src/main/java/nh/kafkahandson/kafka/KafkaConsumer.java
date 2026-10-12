@@ -22,13 +22,17 @@ public class KafkaConsumer {
         this.storageService = storageService;
     }
 
-    // Group id and offset behaviour come from spring.kafka.consumer.* in application.yaml.
-    // Any exception thrown here is handled by the error handler in KafkaConsumerConfig.
+    // TODO: Annotate with @KafkaListener:
+    //  - id: "quote-db-writer"
+    //  - idIsGroup: false (so group id is inherited from application.yaml: spring.kafka.consumer.group-id)
+    //  - topics: "${app.kafka.quote-topic}"
+    //
+    // TODO: Implement onMessage handler:
+    //  1. Log received record (key, topic, partition, offset).
+    //  2. Deserialize record.value() to Quote using objectMapper.readValue(record.value(), Quote.class).
+    //  3. Store quote using storageService.store(quote).
     @KafkaListener(id = "quote-db-writer", idIsGroup = false, topics = "${app.kafka.quote-topic}")
     void onMessage(ConsumerRecord<String, String> record) {
-        log.info("Consumed quote with key:{} from topic:{} partition:{} offset:{} and sent to postgres successfully",
-                record.key(), record.topic(), record.partition(), record.offset());
-        Quote quote = objectMapper.readValue(record.value(), Quote.class);
-        storageService.store(quote);
+        throw new UnsupportedOperationException("TODO: implement onMessage");
     }
 }

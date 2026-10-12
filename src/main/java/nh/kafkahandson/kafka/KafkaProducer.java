@@ -28,15 +28,17 @@ public class KafkaProducer {
     }
 
     public CompletableFuture<SendResult<String, String>> send(Quote quote) {
-        String value = objectMapper.writeValueAsString(quote);
-        return kafkaTemplate.send(topic, quote.symbol(), value)
-                .whenComplete((result, ex) -> {
-                    if (ex != null) {
-                        log.error("Failed to publish quote for {}", quote.symbol(), ex);
-                    } else {
-                        var md = result.getRecordMetadata();
-                        log.info("Produced quote with key:{} to topic:{} on partition:{} with offset:{}", quote.symbol(), md.topic(), md.partition(), md.offset());
-                    }
-                });
+        // TODO: Produce quote to Kafka:
+        //  1. Validate quote is not null (e.g. Objects.requireNonNull or let serialization fail appropriately).
+        //  2. Serialize the Quote to a JSON String using objectMapper.writeValueAsString(quote).
+        //  3. Send to Kafka via kafkaTemplate.send(topic, quote.symbol(), value).
+        //     - topic: the configured quote topic name
+        //     - key: quote.symbol() (ensures partition affinity by stock symbol)
+        //     - value: serialized JSON string
+        //  4. Attach whenComplete callback on the returned CompletableFuture:
+        //     - On failure (ex != null): log error with symbol and exception.
+        //     - On success: log info with key, metadata.topic(), metadata.partition(), metadata.offset().
+        //  5. Return the CompletableFuture.
+        throw new UnsupportedOperationException("TODO: implement send");
     }
 }

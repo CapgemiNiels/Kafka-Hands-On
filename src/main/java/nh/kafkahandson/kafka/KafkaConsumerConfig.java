@@ -26,17 +26,14 @@ class KafkaConsumerConfig {
      */
     @Bean
     DefaultErrorHandler quoteErrorHandler(KafkaTemplate<String, String> kafkaTemplate) {
-        var recoverer = new DeadLetterPublishingRecoverer(kafkaTemplate,
-                (record, ex) -> new TopicPartition(record.topic() + DEAD_LETTER_SUFFIX, -1));
-
-        var backOff = new ExponentialBackOff(1_000L, 2.0);
-        backOff.setMaxAttempts(MAX_RETRIES);
-
-        var handler = new DefaultErrorHandler(recoverer, backOff);
-        handler.addNotRetryableExceptions(JacksonException.class, IllegalArgumentException.class);
-        handler.setRetryListeners((record, ex, attempt) ->
-                log.warn("Delivery attempt {} failed for {}-{}@{}", attempt,
-                        record.topic(), record.partition(), record.offset(), ex));
-        return handler;
+        // TODO: Configure the error handler:
+        //  1. Create a DeadLetterPublishingRecoverer sending failed records to <record.topic() + DEAD_LETTER_SUFFIX>
+        //     with partition -1 (let Kafka choose the partition).
+        //  2. Create an ExponentialBackOff with initial interval 1000ms, multiplier 2.0, maxAttempts = MAX_RETRIES.
+        //  3. Create DefaultErrorHandler with the recoverer and backoff.
+        //  4. Add non-retryable exceptions: JacksonException.class and IllegalArgumentException.class.
+        //  5. Add a retry listener to log warning on failed delivery attempts.
+        //  6. Return the configured handler.
+        throw new UnsupportedOperationException("TODO: implement quoteErrorHandler");
     }
 }

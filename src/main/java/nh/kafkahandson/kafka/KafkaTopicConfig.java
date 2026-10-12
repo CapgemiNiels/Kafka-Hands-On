@@ -11,23 +11,25 @@ import java.time.Duration;
 @Configuration
 class KafkaTopicConfig {
 
+    // TODO: Define the primary quotes topic bean using TopicBuilder:
+    //   - Topic name from props.quoteTopic()
+    //   - Partitions: 3
+    //   - Replicas: 3
+    //   - Min in-sync replicas: 3 (TopicConfig.MIN_IN_SYNC_REPLICAS_CONFIG)
+    //   - Retention: 7 days in ms (TopicConfig.RETENTION_MS_CONFIG, Duration.ofDays(7).toMillis())
     @Bean
     NewTopic quoteTopic(KafkaTopicProperties props) {
-        return TopicBuilder.name(props.quoteTopic())
-                .partitions(3)
-                .replicas(3)
-                .config(TopicConfig.MIN_IN_SYNC_REPLICAS_CONFIG, "3")
-                .config(TopicConfig.RETENTION_MS_CONFIG, String.valueOf(Duration.ofDays(7).toMillis()))
-                .build();
+        throw new UnsupportedOperationException("TODO: implement quoteTopic bean");
     }
 
+    // TODO: Define the dead-letter topic (DLT) bean using TopicBuilder:
+    //   - Topic name: props.quoteTopic() + KafkaConsumerConfig.DEAD_LETTER_SUFFIX
+    //   - Partitions: 3
+    //   - Replicas: 3
+    //   - Min in-sync replicas: 2 (TopicConfig.MIN_IN_SYNC_REPLICAS_CONFIG)
+    //   - Retention: 30 days in ms (TopicConfig.RETENTION_MS_CONFIG, Duration.ofDays(30).toMillis())
     @Bean
     NewTopic quoteDeadLetterTopic(KafkaTopicProperties props) {
-        return TopicBuilder.name(props.quoteTopic() + KafkaConsumerConfig.DEAD_LETTER_SUFFIX)
-                .partitions(3)
-                .replicas(3)
-                .config(TopicConfig.MIN_IN_SYNC_REPLICAS_CONFIG, "2")
-                .config(TopicConfig.RETENTION_MS_CONFIG, String.valueOf(Duration.ofDays(30).toMillis()))
-                .build();
+        throw new UnsupportedOperationException("TODO: implement quoteDeadLetterTopic bean");
     }
 }
